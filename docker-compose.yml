@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ab-testing-agents:
+    build: .
+    container_name: marketing-ab-test
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OUTPUT_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+      - ./images:/app/images  # Mount local images directory if needed
+    command: python main.py --detailed --save
+    
+  # Alternative service for interactive development
+  ab-testing-dev:
+    build: .
+    container_name: marketing-ab-test-dev
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OUTPUT_DIR=/app/results
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    command: tail -f /dev/null  # Keep container running for exec commands
+    profiles:
+      - dev

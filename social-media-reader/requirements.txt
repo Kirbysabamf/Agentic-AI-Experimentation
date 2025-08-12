@@ -1,0 +1,97 @@
+# Social Media Reader Requirements
+
+# Core AI/ML Dependencies
+openai>=1.13.0
+textstat>=0.7.3
+nltk>=3.8.1
+
+# Web Scraping Dependencies
+selenium>=4.17.0
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+praw>=7.7.1
+
+# Data Processing
+pandas>=2.1.0
+numpy>=1.24.0
+
+# Visualization (optional, for analysis)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Configuration and Environment
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+
+# Logging and Utilities
+colorama>=0.4.6
+tqdm>=4.66.0
+click>=8.1.0
+
+# Testing Dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+pytest-asyncio>=0.23.0
+
+# Code Quality
+black>=23.12.0
+flake8>=7.0.0
+mypy>=1.8.0
+isort>=5.13.0
+
+# Type Hints
+types-requests>=2.31.0
+types-beautifulsoup4>=4.12.0
+
+# Optional: Jupyter for analysis
+jupyter>=1.0.0
+ipykernel>=6.26.0
+
+# Optional: Performance monitoring
+psutil>=5.9.0
+memory-profiler>=0.61.0
+
+# Optional: Advanced text processing
+spacy>=3.7.0
+transformers>=4.36.0
+
+# Development and Debugging
+ipdb>=0.13.13
+rich>=13.7.0
+
+# Date/Time utilities
+python-dateutil>=2.8.2
+
+# HTTP client with better session handling
+httpx>=0.26.0
+
+# JSON processing
+orjson>=3.9.0
+
+# File system utilities
+watchdog>=3.0.0
+
+# Optional: Redis for caching
+redis>=5.0.0
+
+# Optional: Database support
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+
+# Optional: API rate limiting
+ratelimit>=2.2.1
+backoff>=2.2.1
+
+# Optional: Image processing
+Pillow>=10.2.0
+
+# Optional: Advanced scheduling
+schedule>=1.2.0
+croniter>=2.0.0
+
+# Optional: Metrics and monitoring
+prometheus-client>=0.19.0
+
+# Security
+cryptography>=41.0.0

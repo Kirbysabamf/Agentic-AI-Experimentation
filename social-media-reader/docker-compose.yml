@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  social-media-reader:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: social-media-reader
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LINKEDIN_EMAIL=${LINKEDIN_EMAIL}
+      - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
+      - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
+      - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
+      - USE_MOCK_DATA=${USE_MOCK_DATA:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+      - ./config:/app/config
+    networks:
+      - social-reader-network
+    restart: unless-stopped
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for caching (optional, for future enhancements)
+  redis:
+    image: redis:7-alpine
+    container_name: social-reader-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - social-reader-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Development service
+  social-media-reader-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: social-media-reader-dev
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LINKEDIN_EMAIL=${LINKEDIN_EMAIL}
+      - LINKEDIN_PASSWORD=${LINKEDIN_PASSWORD}
+      - REDDIT_CLIENT_ID=${REDDIT_CLIENT_ID}
+      - REDDIT_CLIENT_SECRET=${REDDIT_CLIENT_SECRET}
+      - USE_MOCK_DATA=true
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./results:/app/results
+    networks:
+      - social-reader-network
+    profiles:
+      - development
+    command: ["python", "-m", "pytest", "tests/", "-v", "--cov=src"]
+
+  # Jupyter notebook service for data analysis
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: social-reader-jupyter
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - USE_MOCK_DATA=true
+    volumes:
+      - .:/app
+      - ./notebooks:/app/notebooks
+    ports:
+      - "8888:8888"
+    networks:
+      - social-reader-network
+    profiles:
+      - development
+    command: ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''"]
+
+volumes:
+  redis-data:
+
+networks:
+  social-reader-network:
+    driver: bridge
